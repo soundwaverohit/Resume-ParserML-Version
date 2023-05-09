@@ -1,3 +1,5 @@
+"""THIS FILE RUNS THE APPLICATION"""
+
 # import required modules
 import streamlit as st
 import pdfplumber
@@ -27,12 +29,13 @@ with tab1:
     #st.write(uploaded_files)
     st.write("")
     JD = st.text_area("**Enter the job description:**")
-    comp_pressed = st.button("Compare!")
+    comp_pressed = st.button("Compare the both for similarity!")
     if comp_pressed:
         #st.write(uploaded_files[0].name)
         score = Resume_scanner.compare(uploaded_files, JD, flag)
 
 # Tab Results
+"""In this tab we can have multiple resumes with scores"""
 with tab2:
     st.header("Results")
     my_dict = {}
@@ -47,3 +50,9 @@ with tab2:
                 st.write("Score is: ", i[1])
     else:
         st.write("#### Throw in some Resumes to see the score :)")
+
+
+"""KNNLU TO DO
+- you need a good dataframe view to compare a job with multiple resumes and report the best one over various metrics
+
+"""
