@@ -22,7 +22,7 @@ tab1, tab2 = st.tabs(["**Home**","**Results**"])
 
 # Tab Home
 with tab1:
-    st.title("Applicant Tracking System")
+    st.title("Resume - Job Comparison Metrics")
     uploaded_files = st.file_uploader('**Choose your resume.pdf file:** ', type="pdf", accept_multiple_files = True)
     #st.write(uploaded_files)
     st.write("")
