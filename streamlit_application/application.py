@@ -20,10 +20,14 @@ with st.sidebar:
     flag = options
 
 #main content
-tab1, tab2 = st.tabs(["**Home**","**Results**"])
+tab1, tab2 = st.tabs(["**Home**","**Results**"]) #tabs array
 
 # Tab Home
 with tab1:
+    """
+    This is the Home tab where we can add many resumes as we and compare it with the
+    job description
+    """
     st.title("Resume - Job Comparison Metrics")
     uploaded_files = st.file_uploader('**Choose your resume.pdf file:** ', type="pdf", accept_multiple_files = True)
     #st.write(uploaded_files)
@@ -32,7 +36,8 @@ with tab1:
     comp_pressed = st.button("Compare the both for similarity!")
     if comp_pressed:
         #st.write(uploaded_files[0].name)
-        score = Resume_scanner.compare(uploaded_files, JD, flag)
+        score = Resume_scanner.compare(uploaded_files, JD, flag) #this is where we are getting the resume input
+
 
 # Tab Results
 """In this tab we can have multiple resumes with scores"""
@@ -54,5 +59,6 @@ with tab2:
 
 """KNNLU TO DO
 - you need a good dataframe view to compare a job with multiple resumes and report the best one over various metrics
+- add another tab to do that 
 
 """
