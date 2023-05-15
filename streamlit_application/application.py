@@ -15,7 +15,7 @@ flag = 'HuggingFace-BERT'
 with st.sidebar:
     st.markdown('**Which embedding do you want to use**')
     options = st.selectbox('Which embedding do you want to use',
-                            ['HuggingFace-BERT', 'Doc2Vec'],
+                            ['HuggingFace-BERT', 'Doc2Vec (doesnt work)'],
                             label_visibility="collapsed")
     flag = options
 
