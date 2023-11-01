@@ -37,5 +37,10 @@ if selected_job_description and uploaded_files:
         scores = compare(uploaded_files, job_description_text)
         
         st.header(f"Job Description: {selected_job_description}")
-        for i, (resume_name, score) in enumerate(zip(uploaded_resume_names, scores)):
-            st.write(f"Resume Name: {resume_name} - Similarity: {score}%")
+
+        # Create a list of tuples with resume names and their similarity scores
+        resume_scores = list(zip(uploaded_resume_names, scores))
+        # Sort the list by similarity scores in descending order
+        sorted_resume_scores = sorted(resume_scores, key=lambda x: x[1], reverse=True)
+        for i, (resume_name, score) in enumerate(sorted_resume_scores):
+            st.write(f"Rank {i + 1}: Resume Name: {resume_name} - Similarity: {score}%")
