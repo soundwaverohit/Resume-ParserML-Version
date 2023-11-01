@@ -24,7 +24,7 @@ if st.button("Save Job Description") and new_job_description_name:
     st.session_state.saved_job_descriptions[new_job_description_name] = new_job_description_text
     new_job_description_name = ""
     new_job_description_text = ""
-    st.experimental_rerun()
+    st.rerun()
 
 # Select a saved job description
 st.header("Select a Job Description")
