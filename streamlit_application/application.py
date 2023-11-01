@@ -1,64 +1,41 @@
-"""THIS FILE RUNS THE APPLICATION"""
-
-# import required modules
 import streamlit as st
-import pdfplumber
-import Resume_scanner
+from Resume_scanner import compare
 
+# Initialize session state
+if 'saved_job_descriptions' not in st.session_state:
+    st.session_state.saved_job_descriptions = {}
+if 'uploaded_resumes' not in st.session_state:
+    st.session_state.uploaded_resumes = {}
 
-# global values
-comp_pressed = False
-score = 0
+# Title and description
+st.title("Resume Ranker")
+st.write("Upload multiple resumes and provide job descriptions to rank resumes by similarity.")
 
-#Sidebar
-flag = 'HuggingFace-BERT'
-with st.sidebar:
-    st.markdown('**Which embedding do you want to use**')
-    options = st.selectbox('Which embedding do you want to use',
-                            ['HuggingFace-BERT', 'Doc2Vec (doesnt work)'],
-                            label_visibility="collapsed")
-    flag = options
+# Upload multiple resumes with names
+st.header("Upload Resumes")
+uploaded_files = st.file_uploader("Upload resumes (PDF format)", type=["pdf"], accept_multiple_files=True)
+uploaded_resume_names = [st.text_input(f"Name for Resume {i + 1}") for i in range(len(uploaded_files))]
 
-#main content
-tab1, tab2 = st.tabs(["**Home**","**Results**"]) #tabs array
+# Save job descriptions with names
+st.header("Save Job Descriptions")
+new_job_description_name = st.text_input("Enter a name for the job description")
+new_job_description_text = st.text_area("Enter a job description", height=200)
+if st.button("Save Job Description") and new_job_description_name:
+    st.session_state.saved_job_descriptions[new_job_description_name] = new_job_description_text
+    new_job_description_name = ""
+    new_job_description_text = ""
+    st.experimental_rerun()
 
-# Tab Home
-with tab1:
-    """
-    This is the Home tab where we can add many resumes as we and compare it with the
-    job description
-    """
-    st.title("Resume - Job Comparison Metrics")
-    uploaded_files = st.file_uploader('**Choose your resume.pdf file:** ', type="pdf", accept_multiple_files = True)
-    #st.write(uploaded_files)
-    st.write("")
-    JD = st.text_area("**Enter the job description:**")
-    comp_pressed = st.button("Compare the both for similarity!")
-    if comp_pressed:
-        #st.write(uploaded_files[0].name)
-        score = Resume_scanner.compare(uploaded_files, JD, flag) #this is where we are getting the resume input
+# Select a saved job description
+st.header("Select a Job Description")
+selected_job_description = st.selectbox("Select a Job Description", list(st.session_state.saved_job_descriptions.keys()))
 
-
-# Tab Results
-"""In this tab we can have multiple resumes with scores"""
-with tab2:
-    st.header("Results")
-    my_dict = {}
-    if comp_pressed:
-        for i in range(len(score)):
-            my_dict[uploaded_files[i].name] = score[i]
-        print(my_dict)
-        sorted_dict = dict(sorted(my_dict.items()))
-        print(sorted_dict)
-        for i in sorted_dict.items():
-            with st.expander(str(i[0])):
-                st.write("Score is: ", i[1])
-    else:
-        st.write("#### Throw in some Resumes to see the score :)")
-
-
-"""KNNLU TO DO
-- you need a good dataframe view to compare a job with multiple resumes and report the best one over various metrics
-- add another tab to do that 
-
-"""
+# Button to calculate similarity scores for each named resume
+if selected_job_description and uploaded_files:
+    if st.button("Calculate Similarity"):
+        job_description_text = st.session_state.saved_job_descriptions[selected_job_description]
+        scores = compare(uploaded_files, job_description_text)
+        
+        st.header(f"Job Description: {selected_job_description}")
+        for i, (resume_name, score) in enumerate(zip(uploaded_resume_names, scores)):
+            st.write(f"Resume Name: {resume_name} - Similarity: {score}%")
