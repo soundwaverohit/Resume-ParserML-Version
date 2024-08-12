@@ -7,3 +7,4 @@ nltk
 transformers
 torch
 scikit-learn
+scipy==1.10.1
